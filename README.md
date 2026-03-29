@@ -1,8 +1,8 @@
 # Go MOBI
 
-[![Github Actions CI](https://github.com/leotaku/mobi/workflows/check/badge.svg)](https://github.com/leotaku/mobi/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/leotaku/mobi)](https://goreportcard.com/report/github.com/leotaku/mobi)
-[![Go Reference](https://pkg.go.dev/badge/github.com/leotaku/mobi.svg)](https://pkg.go.dev/github.com/leotaku/mobi)
+[![Github Actions CI](https://github.com/dsparkman/mobi/workflows/check/badge.svg)](https://github.com/dsparkman/mobi/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dsparkman/mobi)](https://goreportcard.com/report/github.com/dsparkman/mobi)
+[![Go Reference](https://pkg.go.dev/badge/github.com/dsparkman/mobi.svg)](https://pkg.go.dev/github.com/dsparkman/mobi)
 
 This package implements facilities to create KF8-formatted MOBI and AZW3 books.
 We also export the raw PalmDB writer and various PalmDoc, MOBI and KF8 components as subpackages, which can be used to implement other formats that build on these standards.

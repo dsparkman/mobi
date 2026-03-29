@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/leotaku/mobi/pdb"
-	t "github.com/leotaku/mobi/types"
+	"github.com/dsparkman/mobi/pdb"
+	t "github.com/dsparkman/mobi/types"
 )
 
 // To32 converts an integer to a content identifier string.

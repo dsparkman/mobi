@@ -3,7 +3,7 @@ package mobi
 import (
 	"strings"
 
-	r "github.com/leotaku/mobi/records"
+	r "github.com/dsparkman/mobi/records"
 )
 
 func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {

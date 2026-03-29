@@ -1,4 +1,4 @@
-module github.com/leotaku/mobi
+module github.com/dsparkman/mobi
 
 go 1.16
 

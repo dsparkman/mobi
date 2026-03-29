@@ -4,7 +4,7 @@ import (
 	"image"
 	"io"
 
-	"github.com/leotaku/mobi/jfif"
+	"github.com/dsparkman/mobi/jfif"
 )
 
 type ImageRecord struct {
