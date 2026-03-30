@@ -1,0 +1,60 @@
+# github.com/dsparkman/mobi
+
+> A Go library for writing Kindle KF8/AZW3 ebooks. Fork of leotaku/mobi with error-returning API, PalmDOC LZ77 compression, nested chapter/subchapter NCX, full EXTH metadata, and a first-class `markdown` subpackage for converting Markdown streams directly to `.azw3` files.
+
+Two packages cover all use cases:
+
+- `github.com/dsparkman/mobi` — build books programmatically from XHTML fragments
+- `github.com/dsparkman/mobi/markdown` — convert Markdown files or `io.Reader` streams to books
+
+**Critical differences from leotaku/mobi (the upstream):**
+- `Realize()` returns `(pdb.Database, error)` — never panics
+- `Book` has no exported fields; use `NewBook(title, uid, ...opts)` constructor
+- `WithLanguage` in the `mobi` package takes `language.Tag`, not a string
+- `WithLanguage` in the `markdown` package takes a BCP-47 string, not `language.Tag`
+- `WithCoverImage` in `mobi` takes two `image.Image` arguments (cover + thumb)
+- `WithCoverImage` in `markdown` takes one file path string
+
+**Go version target:** go 1.26. Modern idioms are used throughout: `any` not `interface{}`, built-in `min`/`max`, `cmp.Or`, `for i := range n` (integer range, Go 1.22+), `math/rand/v2` (Go 1.22+), capacitated `make`.
+
+**Deliberate style exceptions** — do not "fix" these when generating code for this library:
+- `validateUTF8` in `markdown/utf8.go` uses `for i := 0; i < len(src);` with `i += size` because `utf8.DecodeRune` returns a variable byte width (1–4). A range loop advances by 1 byte per iteration and would produce wrong offsets.
+- `palmdocCompress` in `compress.go` uses `for off := 0; off < len(src); off += palmdocBlockSize` because no range form supports a fixed stride of 4096 with simultaneous slicing.
+- `compressBlock` in `compress.go` uses two manual index loops because both the outer cursor (`i`) and inner window scanner (`j`) must track absolute positions to compute back-reference distances. Range loops over sub-slices would lose that position information.
+
+## Core library — mobi package
+
+- [Source: mobi.go](mobi.go): `NewBook`, `BookOption` functions, `Realize()`, `GetThumbFilename()`, `Compression` constants
+- [Source: chapter.go](chapter.go): `SimpleChapter`, `NewChapter` builder, `AddContent`, `AddSubChapter`, `Build`
+- [Source: compress.go](compress.go): PalmDOC LZ77 compressor (style exceptions documented in source)
+- [Source: util.go](util.go): `chaptersToText`, `textToRecords` pipeline
+- [Source: types/exth_extra.go](types/exth_extra.go): EXTH record constants (description=103, ISBN=104, rights=109, start-reading=116, clipping=401, TTS=404)
+
+## Markdown converter — markdown subpackage
+
+- [Source: markdown/converter.go](markdown/converter.go): `NewConverter`, `Convert(io.Reader)`, `ConvertFile(path)`, `ConvertBytes([]byte)`
+- [Source: markdown/options.go](markdown/options.go): All `markdown.Option` functions and `SplitLevel` constants
+- [Source: markdown/frontmatter.go](markdown/frontmatter.go): YAML front-matter parsing and merge rules
+- [Source: markdown/chapters.go](markdown/chapters.go): Heading-based chapter and sub-chapter splitting
+- [Source: markdown/render.go](markdown/render.go): Markdown→HTML rendering and Kindle sanitisation
+- [Source: markdown/css_image.go](markdown/css_image.go): Built-in Kindle CSS stylesheet and cover image loading
+- [Source: markdown/utf8.go](markdown/utf8.go): UTF-8 input validation and safe slicing (style exception documented in source)
+
+## Tests and examples
+
+- [Source: mobi_test.go](mobi_test.go): Core library tests including PDB structural checks
+- [Source: compress_test.go](compress_test.go): PalmDOC round-trip tests
+- [Source: compress_fuzz_test.go](compress_fuzz_test.go): Fuzz test for compressor
+- [Source: markdown/converter_test.go](markdown/converter_test.go): Full pipeline tests
+- [Source: markdown/frontmatter_test.go](markdown/frontmatter_test.go): Front-matter parsing tests
+- [Source: markdown/utf8_test.go](markdown/utf8_test.go): UTF-8 validation tests
+- [Source: markdown/example_test.go](markdown/example_test.go): Runnable usage examples
+
+## Migration and reference
+
+- [MIGRATION.md](MIGRATION.md): Breaking changes from leotaku/mobi with before/after code
+- [llms-full.txt](llms-full.txt): Complete documentation in one file for LLM context
+
+## Optional
+
+- [README.md](README.md): Human-readable overview and quick start

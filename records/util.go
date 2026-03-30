@@ -98,7 +98,7 @@ func deconstructTag(tag t.TAGXTag) (byte, byte, byte, byte) {
 	return bs[0], bs[1], bs[2], bs[3]
 }
 
-func writeSequential(w io.Writer, bo binary.ByteOrder, vs ...interface{}) error {
+func writeSequential(w io.Writer, bo binary.ByteOrder, vs ...any) error {
 	for _, v := range vs {
 		err := binary.Write(w, bo, v)
 		if err != nil {
@@ -108,7 +108,7 @@ func writeSequential(w io.Writer, bo binary.ByteOrder, vs ...interface{}) error 
 	return nil
 }
 
-func bytesSequential(bo binary.ByteOrder, vs ...interface{}) []byte {
+func bytesSequential(bo binary.ByteOrder, vs ...any) []byte {
 	buf := bytes.NewBuffer(nil)
 	err := writeSequential(buf, bo, vs...)
 	if err != nil {

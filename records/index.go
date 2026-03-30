@@ -66,8 +66,8 @@ func NCXIndexRecord(info []ChapterInfo) (IndexRecord, CNCXRecord) {
 			calculateControlByte(t.TAGXTableChunk),
 			encodeVwi(chap.Start),  // Record offset
 			encodeVwi(chap.Length), // Length of a record
-			encodeVwi(cncxOffset),  // Label offset relative to CNXC record
-			encodeVwi(0),           // Null
+			encodeVwi(cncxOffset),  // Label offset relative to CNCX record
+			encodeVwi(chap.Depth),  // Depth level (0=top, 1=sub-chapter)
 		)
 		idxtEntries = append(idxtEntries, bs)
 		cncxOffset += len(cncx)
@@ -150,6 +150,7 @@ type ChapterInfo struct {
 	Title  string
 	Start  int
 	Length int
+	Depth  int // 0 = top-level chapter, 1 = sub-chapter
 }
 
 func encodeINDXString(label string) []byte {

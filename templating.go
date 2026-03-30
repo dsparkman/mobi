@@ -1,7 +1,6 @@
 package mobi
 
 import (
-	"bytes"
 	"text/template"
 
 	r "github.com/dsparkman/mobi/records"
@@ -30,42 +29,3 @@ var funcMap = template.FuncMap{
 }
 
 var defaultTemplate = template.Must(template.New("default").Funcs(funcMap).Parse(defaultTemplateString))
-
-type inventory struct {
-	Mobi    Book
-	Chapter struct {
-		Title string
-		ID    int
-	}
-	Chunk struct {
-		ID int
-	}
-}
-
-func newInventory(m Book, c Chapter, chapID int, chunkID int) inventory {
-	return inventory{
-		Mobi: m,
-		Chapter: struct {
-			Title string
-			ID    int
-		}{
-			Title: c.Title,
-			ID:    chapID,
-		},
-		Chunk: struct {
-			ID int
-		}{
-			ID: chunkID,
-		},
-	}
-}
-
-func runTemplate(tpl template.Template, v interface{}) (string, error) {
-	buf := bytes.NewBuffer(nil)
-	err := tpl.Execute(buf, v)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
-}

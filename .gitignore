@@ -1,7 +1,18 @@
-# Experimentation
-/decompiled_*
-/_wip
-# Book formats
-/*.mobi
-/*.azw3
-/*.epub
+# Binaries
+bin/
+dist/
+
+# Coverage
+coverage.out
+*.coverprofile
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Env
+.env
+.env.local

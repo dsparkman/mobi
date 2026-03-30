@@ -127,14 +127,16 @@ func ReadDatabase(r io.Reader) (*Database, error) {
 	name := trimZeroes(string(palmDBHeader.Name[:]))
 	date := convertFromPalmTime(palmDBHeader.CreationTime)
 
-	records := make([]Record, 0)
+	records := make([]Record, 0, len(offsets))
 	for i := 1; i < len(offsets); i++ {
 		curr := offsets[i].Offset
 		prev := offsets[i-1].Offset
 		records = append(records, RawRecord(data[prev:curr]))
 	}
-	last := offsets[len(offsets)-1].Offset
-	records = append(records, RawRecord(data[last:]))
+	if len(offsets) > 0 {
+		last := offsets[len(offsets)-1].Offset
+		records = append(records, RawRecord(data[last:]))
+	}
 
 	return &Database{
 		Name:    name,

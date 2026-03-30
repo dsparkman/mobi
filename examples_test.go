@@ -1,37 +1,39 @@
 package mobi_test
 
 import (
-	"math/rand"
+	"log"
+	"math/rand/v2"
 	"os"
-	"time"
 
 	"github.com/dsparkman/mobi"
 	"golang.org/x/text/language"
 )
 
 func ExampleBook() {
-	// Create simple book with chapter
-	ch := mobi.Chapter{
-		Title:  "Chapter 1",
-		Chunks: mobi.Chunks(`Lorem ipsum dolor sit amet, consetetur sadipscing elitr.`),
-	}
-	mb := mobi.Book{
-		Title:       "De vita Caesarum librus",
-		Authors:     []string{"Sueton"},
-		CreatedDate: time.Now(),
-		Language:    language.Italian,
-		Chapters:    []mobi.Chapter{ch},
-		UniqueID:    rand.Uint32(),
-	}
+	ch := mobi.SimpleChapter("Chapter 1", "<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</p>")
 
-	// Convert book to PalmDB database
-	db := mb.Realize()
-
-	// Write database to file
-	f, _ := os.Create("test.azw3")
-	defer f.Close() //nolint:errcheck
-	err := db.Write(f)
+	book, err := mobi.NewBook("De vita Caesarum librus",
+		rand.Uint32(),
+		mobi.WithAuthors("Sueton"),
+		mobi.WithLanguage(language.Italian),
+		mobi.WithChapters(ch),
+	)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+
+	db, err := book.Realize()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f, err := os.Create("test.azw3")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() { _ = f.Close() }()
+
+	if err := db.Write(f); err != nil {
+		log.Fatal(err)
 	}
 }

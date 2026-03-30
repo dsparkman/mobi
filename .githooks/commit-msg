@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="$1"
+msg="$(head -n1 "$msg_file")"
+
+pattern='^(feat|fix|refactor|docs|test|chore)(\([a-zA-Z0-9._/-]+\))?: .+'
+
+if ! printf '%s' "$msg" | grep -Eq "$pattern"; then
+  echo "Invalid commit message."
+  echo
+  echo "Use one of these formats:"
+  echo "  feat: add parser support"
+  echo "  fix: handle nil input"
+  echo "  refactor(api): simplify decoder"
+  echo "  docs: update README"
+  echo "  test: add tokenizer coverage"
+  echo "  chore: update tooling"
+  exit 1
+fi

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running Go checks..."
+go fmt ./...
+go mod tidy
+
+if ! git diff --quiet -- go.mod go.sum; then
+  echo
+  echo "go.mod or go.sum changed. Please review and stage them."
+  git diff -- go.mod go.sum
+  exit 1
+fi
+
+go vet ./...
+golangci-lint run
+staticcheck ./...
+go test ./...
