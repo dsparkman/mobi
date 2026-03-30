@@ -181,4 +181,3 @@ func scaleTo(src image.Image, maxW, maxH int) image.Image {
 	draw.BiLinear.Scale(dst, dst.Bounds(), src, b, draw.Over, nil)
 	return dst
 }
-

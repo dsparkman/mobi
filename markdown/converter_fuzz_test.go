@@ -21,8 +21,8 @@ func FuzzConvertMarkdown(f *testing.F) {
 		"---\ntitle: T\nauthor: A\n---\n# H\n\nContent.",
 		"# Part\n## Sub\nContent.\n## Sub2\nMore.",
 		"<script>alert(1)</script>\n# H\n\nBody.",
-		"Line one  \nLine two\n",                   // trailing spaces → <br>
-		"| A | B |\n|---|---|\n| 1 | 2 |\n# H\n\n", // table
+		"Line one  \nLine two\n",                             // trailing spaces → <br>
+		"| A | B |\n|---|---|\n| 1 | 2 |\n# H\n\n",           // table
 		"# " + string([]byte{0xC3, 0xA9}) + "\n\nCafé body.", // UTF-8 accent
 	}
 	for _, s := range seeds {

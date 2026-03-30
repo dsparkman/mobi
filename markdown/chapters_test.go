@@ -248,4 +248,3 @@ func TestChapBuilder_SubChaptersAsTopLevel(t *testing.T) {
 		t.Errorf("titles: want [X, Y], got [%s, %s]", chapters[0].Title(), chapters[1].Title())
 	}
 }
-
